@@ -1,10 +1,11 @@
 from sys import stdin
 
-def adjacency_lists():
-    nodes = int(input())
+def adjacency_lists(graph_file):
+    graph = open(graph_file, "r")
+    nodes = int(graph.readline())
     fwd_adjacency = [set([]) for _ in range(nodes)]
     rev_adjacency = [set([]) for _ in range(nodes)]
-    for line in stdin:
+    for line in graph:
         nodes = line.split(" ")
         first = int(nodes[0])
         second = int(nodes[1])
@@ -13,16 +14,12 @@ def adjacency_lists():
     return (fwd_adjacency, rev_adjacency)
 
 def find_weakly_connected_component(single_dir_adjacency, visited, root):
-    # local copy of visited
     tmp_vis = [x for x in visited]
-    # keep set of nodes reachable in set
     reachable = set([])
-    # begin BFS
     q = [root]
     tmp_vis[root] = True
     while(q != []):
         cur = q.pop(0)
-        # as popped, add to reachable set
         reachable.add(cur)
         for neighbor in single_dir_adjacency[cur]:
             if(tmp_vis[neighbor]):
@@ -54,7 +51,15 @@ def count_strongly_connected_components(fwd_adjacency, rev_adjacency, visited):
         strongly_connected_components += 1
     return strongly_connected_components
 
-if __name__ == '__main__':
-    fwd_adjacency, rev_adjacency = adjacency_lists()
+def read_and_count(graph_file):
+    fwd_adjacency, rev_adjacency = adjacency_lists(graph_file)
     visited = [False for _ in range(len(fwd_adjacency))]
-    print(count_strongly_connected_components(fwd_adjacency, rev_adjacency, visited))
+    return count_strongly_connected_components(fwd_adjacency, rev_adjacency, visited)
+
+
+if __name__ == '__main__':
+    print("n10:\t"+str(read_and_count("./graphs/n10.txt")))
+    print("n100:\t"+str(read_and_count("./graphs/n100.txt")))
+    print("n1000:\t"+str(read_and_count("./graphs/n1000.txt")))
+    print("n10000:\t"+str(read_and_count("./graphs/n10000.txt")))
+    print("s1:\t"+str(read_and_count("./graphs/s1.txt")))

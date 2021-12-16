@@ -1,9 +1,10 @@
 from sys import stdin
 
-def adjacency_list():
-    nodes = int(input())
+def adjacency_list(graph_file):
+    graph = open(graph_file, "r")
+    nodes = int(graph.readline())
     adjacency = [set([]) for _ in range(nodes)]
-    for line in stdin:
+    for line in graph:
         nodes = line.split(" ")
         first = int(nodes[0])
         second = int(nodes[1])
@@ -35,7 +36,14 @@ def count_connected_components(adjacency, visited):
         connected_components += 1
     return connected_components
 
-if __name__ == '__main__':
-    adjacency = adjacency_list()
+def read_and_count(graph_file):
+    adjacency = adjacency_list(graph_file)
     visited = [False for _ in range(len(adjacency))]
-    print(count_connected_components(adjacency, visited))
+    return count_connected_components(adjacency, visited)
+
+if __name__ == '__main__':
+    print("n10:\t"+str(read_and_count("./graphs/n10.txt")))
+    print("n100:\t"+str(read_and_count("./graphs/n100.txt")))
+    print("n1000:\t"+str(read_and_count("./graphs/n1000.txt")))
+    print("n10000:\t"+str(read_and_count("./graphs/n10000.txt")))
+    print("s1:\t"+str(read_and_count("./graphs/s1.txt")))
